@@ -6,7 +6,7 @@ async function fetchMeals(query) {
 }
 
 // Display Meals in the DOM
-function displayMeals(meals) {
+function displayMeals(meals, startIndex = 0) {
     const resultsContainer = document.getElementById("resultsContainer");
     resultsContainer.innerHTML = "";  // Clear previous results
 
@@ -15,7 +15,8 @@ function displayMeals(meals) {
         return;
     }
 
-    meals.slice(0, 5).forEach(meal => {
+    // Slice meals based on startIndex for pagination
+    meals.slice(startIndex, startIndex + 5).forEach(meal => {
         const mealCard = document.createElement("div");
         mealCard.classList.add("col");
         mealCard.classList.add("meal-item");
@@ -30,10 +31,16 @@ function displayMeals(meals) {
         resultsContainer.appendChild(mealCard);
     });
 
-    if (meals.length > 5) {
-        const showAllBtn = document.getElementById("showAllBtn");
+    // Handle showing the "Show All" button and linking it to the next set of meals
+    const showAllBtn = document.getElementById("showAllBtn");
+    if (meals.length > startIndex + 5) {
         showAllBtn.classList.remove("d-none");
-        showAllBtn.addEventListener("click", () => displayMeals(meals));
+        showAllBtn.addEventListener("click", () => {
+            showAllBtn.classList.add("d-none"); // Hide the "Show All" button after click
+            displayMeals(meals, startIndex + 5); // Display the next set of meals
+        });
+    } else {
+        showAllBtn.classList.add("d-none");
     }
 }
 
@@ -70,7 +77,7 @@ document.getElementById("searchButton").addEventListener("click", async () => {
     const query = document.getElementById("searchInput").value.trim();
     if (query) {
         const meals = await fetchMeals(query);
-        displayMeals(meals);
+        displayMeals(meals); // Display the first 5 meals
     }
 });
 
