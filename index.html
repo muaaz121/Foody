@@ -18,20 +18,18 @@
 
     <div class="results" id="results"></div>
     <button id="showAllBtn" style="display: none; margin-top: 20px;" onclick="showAllMeals()">SHOW ALL</button>
+<!-- Modal -->
+<div id="overlay" class="overlay"></div>
 
-    <div class="overlay" id="overlay" onclick="closeModal()"></div>
-    <div class="modal" id="mealModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">Close</button>
-            <h2 id="mealTitle"></h2>
-            <img id="mealImage" src="" alt="" style="width:100%; border-radius:8px;">
-            <p><strong>Category:</strong> <span id="mealCategory"></span></p>
-            <p><strong>Area:</strong> <span id="mealArea"></span></p>
-            <p><strong>Instructions:</strong> <span id="mealInstructions"></span></p>
-            <h3>Ingredients:</h3>
-            <ul id="mealIngredients"></ul>
-        </div>
+<div id="mealModal" class="modal">
+    <div class="modal-content">
+        <h2></h2>
+        <img src="" alt="Meal Image" />
+        <ul></ul>
+        <button id="closeModalBtn" class="close-btn">Close</button>
     </div>
+</div>
+
 
     <footer>
         <p>&copy; 2025 Meal Finder</p>
