@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+header {
+    background-color: #343a40;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
+}
+h1 {
+    text-align: center;
+    color: #343a40;
+}
+.search-container {
+    text-align: center;
+    margin-top: 20px;
+}
+input {
+    padding: 10px;
+    width: 60%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0056b3;
+}
+.results {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+.meal-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.meal-item img {
+    max-width: 100%;
+    border-radius: 4px;
+}
+.meal-item h3 {
+    margin: 10px 0;
+    color: #343a40;
+}
+.meal-item p {
+    font-size: 14px;
+    color: #6c757d;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    overflow-y: auto;
+    max-height: 90%;
+}
+.modal-content h2 {
+    margin: 0 0 10px;
+}
+.modal-content ul {
+    padding: 0;
+    list-style: none;
+}
+.modal-content ul li {
+    margin: 5px 0;
+}
+.close-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}

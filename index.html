@@ -4,113 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meal Search</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            text-align: center;
-            color: #343a40;
-        }
-        .search-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        input {
-            padding: 10px;
-            width: 60%;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .results {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .meal-item {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-        }
-        .meal-item img {
-            max-width: 100%;
-            border-radius: 4px;
-        }
-        .meal-item h3 {
-            margin: 10px 0;
-            color: #343a40;
-        }
-        .meal-item p {
-            font-size: 14px;
-            color: #6c757d;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 600px;
-            text-align: left;
-        }
-        .modal-content h2 {
-            margin: 0 0 10px;
-        }
-        .modal-content ul {
-            padding: 0;
-            list-style: none;
-        }
-        .modal-content ul li {
-            margin: 5px 0;
-        }
-        .close-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            float: right;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Search for Meals</h1>
+    <header>
+        <h1>Search for Meals</h1>
+    </header>
+
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Enter meal name...">
         <button onclick="searchMeal()">Search</button>
-        <button onclick="clearResults()">Clear Results</button>
     </div>
-    <div class="results" id="results"></div>
 
+    <div class="results" id="results"></div>
+    <button id="showAllBtn" style="display: none; margin-top: 20px;" onclick="showAllMeals()">SHOW ALL</button>
+
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
     <div class="modal" id="mealModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">Close</button>
@@ -124,77 +33,10 @@
         </div>
     </div>
 
-    <script>
-        async function searchMeal() {
-            const query = document.getElementById('searchInput').value.trim();
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
+    <footer>
+        <p>&copy; 2025 Meal Finder</p>
+    </footer>
 
-            if (!query) {
-                alert('Please enter a meal name to search.');
-                return;
-            }
-
-            resultsDiv.innerHTML = 'Loading...';
-
-            try {
-                const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`);
-                const data = await response.json();
-
-                resultsDiv.innerHTML = '';
-                if (!data.meals) {
-                    resultsDiv.innerHTML = 'No results found.';
-                    return;
-                }
-
-                data.meals.forEach(meal => {
-                    const mealDiv = document.createElement('div');
-                    mealDiv.className = 'meal-item';
-                    mealDiv.onclick = () => showMealDetails(meal);
-                    mealDiv.innerHTML = `
-                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
-                        <h3>${meal.strMeal}</h3>
-                        <p><strong>Meal ID:</strong> ${meal.idMeal}</p>
-                    `;
-                    resultsDiv.appendChild(mealDiv);
-                });
-            } catch (error) {
-                resultsDiv.innerHTML = 'An error occurred while fetching data.';
-                console.error(error);
-            }
-        }
-
-        function showMealDetails(meal) {
-            document.getElementById('mealTitle').textContent = meal.strMeal;
-            document.getElementById('mealImage').src = meal.strMealThumb;
-            document.getElementById('mealCategory').textContent = meal.strCategory || 'N/A';
-            document.getElementById('mealArea').textContent = meal.strArea || 'N/A';
-            document.getElementById('mealInstructions').textContent = meal.strInstructions;
-
-            const ingredientsList = document.getElementById('mealIngredients');
-            ingredientsList.innerHTML = '';
-
-            for (let i = 1; i <= 20; i++) {
-                const ingredient = meal[`strIngredient${i}`];
-                const measure = meal[`strMeasure${i}`];
-                if (ingredient && ingredient.trim()) {
-                    const li = document.createElement('li');
-                    li.textContent = `${measure || ''} ${ingredient}`;
-                    ingredientsList.appendChild(li);
-                }
-            }
-
-            document.getElementById('mealModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('mealModal').style.display = 'none';
-        }
-
-        function clearResults() {
-            document.getElementById('results').innerHTML = '';
-            document.getElementById('searchInput').value = '';
-        }
-    </script>
+    <script src="miss.js"></script>
 </body>
 </html>
