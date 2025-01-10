@@ -233,4 +233,82 @@
     let meals = [];
     let allMeals = [];
 
-    // Fetch and display so
+    // Fetch and display some sample meals on page load
+    window.onload = async () => {
+      try {
+        const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/randomselection.php`);
+        meals = response.data.meals || [];
+        allMeals = meals;
+        displayMeals(meals);
+      } catch (error) {
+        console.error('Error fetching sample meals', error);
+      }
+    };
+
+    // Search bar functionality
+    searchBar.addEventListener('input', async (e) => {
+      const query = e.target.value;
+      if (query) {
+        try {
+          const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
+          meals = response.data.meals || [];
+          allMeals = meals;
+          displayMeals(meals.slice(0, 5));
+          showAllBtn.style.display = meals.length > 5 ? 'block' : 'none'; // Show the "SHOW ALL" button if more than 5 meals
+        } catch (error) {
+          console.error('Error fetching meal data', error);
+        }
+      } else {
+        mealResultsContainer.innerHTML = '';
+        showAllBtn.style.display = 'none';
+      }
+    });
+
+    // Display meals on the page with all required details
+    function displayMeals(mealArray) {
+      mealResultsContainer.innerHTML = ''; // Clear previous results
+      mealArray.forEach(meal => {
+        const mealCard = document.createElement('div');
+        mealCard.classList.add('meal-card', 'card', 'mb-3');
+        mealCard.innerHTML = `
+          <div class="card-body">
+            <h3>${meal.strMeal}</h3>
+            <p><strong>ID:</strong> ${meal.idMeal}</p>
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="card-img-top">
+            <p><strong>Title:</strong> ${meal.strCategory}</p>
+            <p><strong>Instructions:</strong> ${meal.strInstructions.substring(0, 100)}...</p>
+            <button class="btn btn-primary" onclick="showMealDetails('${meal.idMeal}')">View Recipe</button>
+          </div>
+        `;
+        mealResultsContainer.appendChild(mealCard);
+      });
+    }
+
+    // Show meal details in modal
+    async function showMealDetails(mealId) {
+      const meal = allMeals.find(m => m.idMeal === mealId);
+      if (!meal) return;
+
+      mealTitle.textContent = meal.strMeal;
+      mealImage.src = meal.strMealThumb;
+      mealInstructions.textContent = meal.strInstructions;
+      mealNutrition.textContent = "Calories: 200, Protein: 15g, Carbs: 30g"; // Dummy data
+
+      // Ensure YouTube video URL is properly formatted
+      if (meal.strYoutube) {
+        const videoId = meal.strYoutube.split('v=')[1];
+        mealVideo.src = `https://www.youtube.com/embed/${videoId}`;
+      }
+
+      $('#meal-modal').modal('show');
+    }
+
+    // Show all meals functionality
+    showAllBtn.addEventListener('click', () => {
+      displayMeals(allMeals); // Show all meals
+      showAllBtn.style.display = 'none'; // Hide the "SHOW ALL" button after clicking
+    });
+  </script>
+
+</body>
+</html>
