@@ -29,7 +29,26 @@
       font-size: 32px;
       margin-bottom: 10px;
     }
-    
+
+    .contact-header p {
+      color: #777;
+      font-size: 16px;
+    }
+
+    .form-control {
+      margin-bottom: 15px;
+    }
+
+    .submit-btn {
+      background-color: #050505;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
     .submit-btn:hover {
       background-color: #0056b3;
     }
@@ -86,3 +105,35 @@
   <div class="success-message">Thank you for your message! We'll get back to you soon.</div>
   <div class="error-message">Oops! Something went wrong. Please try again.</div>
 </div>
+
+<script>
+  const contactForm = document.getElementById('contact-form');
+  const successMessage = document.querySelector('.success-message');
+  const errorMessage = document.querySelector('.error-message');
+
+  contactForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if (name && email && message) {
+      successMessage.style.display = 'block';
+      errorMessage.style.display = 'none';
+      contactForm.reset();
+
+      console.log('Form Data Submitted:', { name, email, message });
+      // Simulate backend submission
+      setTimeout(() => {
+        alert('Form submitted successfully!');
+      }, 1000);
+    } else {
+      successMessage.style.display = 'none';
+      errorMessage.style.display = 'block';
+    }
+  });
+</script>
+
+</body>
+</html>
