@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .search-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 60%;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .food-item {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Food Search</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for food...">
+        <button onclick="searchFood()">Search</button>
+    </div>
+    <div class="results" id="results"></div>
+
+    <script>
+        async function searchFood() {
+            const query = document.getElementById('searchInput').value;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Loading...';
+
+            try {
+                const response = await fetch(`https://api.example.com/foods?search=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                resultsDiv.innerHTML = '';
+                if (data.length === 0) {
+                    resultsDiv.innerHTML = 'No results found.';
+                    return;
+                }
+
+                data.forEach(item => {
+                    const foodDiv = document.createElement('div');
+                    foodDiv.className = 'food-item';
+                    foodDiv.innerHTML = `<h3>${item.name}</h3><p>${item.description}</p>`;
+                    resultsDiv.appendChild(foodDiv);
+                });
+            } catch (error) {
+                resultsDiv.innerHTML = 'An error occurred while fetching data.';
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
