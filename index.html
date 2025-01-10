@@ -48,6 +48,7 @@
             border-radius: 4px;
             background-color: #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
         }
         .meal-item img {
             max-width: 100%;
@@ -61,6 +62,44 @@
             font-size: 14px;
             color: #6c757d;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            text-align: left;
+        }
+        .modal-content h2 {
+            margin: 0 0 10px;
+        }
+        .modal-content ul {
+            padding: 0;
+            list-style: none;
+        }
+        .modal-content ul li {
+            margin: 5px 0;
+        }
+        .close-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -68,13 +107,34 @@
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Enter meal name...">
         <button onclick="searchMeal()">Search</button>
+        <button onclick="clearResults()">Clear Results</button>
     </div>
     <div class="results" id="results"></div>
 
+    <div class="modal" id="mealModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">Close</button>
+            <h2 id="mealTitle"></h2>
+            <img id="mealImage" src="" alt="" style="width:100%; border-radius:8px;">
+            <p><strong>Category:</strong> <span id="mealCategory"></span></p>
+            <p><strong>Area:</strong> <span id="mealArea"></span></p>
+            <p><strong>Instructions:</strong> <span id="mealInstructions"></span></p>
+            <h3>Ingredients:</h3>
+            <ul id="mealIngredients"></ul>
+        </div>
+    </div>
+
     <script>
         async function searchMeal() {
-            const query = document.getElementById('searchInput').value;
+            const query = document.getElementById('searchInput').value.trim();
             const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (!query) {
+                alert('Please enter a meal name to search.');
+                return;
+            }
+
             resultsDiv.innerHTML = 'Loading...';
 
             try {
@@ -90,12 +150,11 @@
                 data.meals.forEach(meal => {
                     const mealDiv = document.createElement('div');
                     mealDiv.className = 'meal-item';
+                    mealDiv.onclick = () => showMealDetails(meal);
                     mealDiv.innerHTML = `
                         <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
                         <h3>${meal.strMeal}</h3>
                         <p><strong>Meal ID:</strong> ${meal.idMeal}</p>
-                        <p><strong>Category:</strong> ${meal.strCategory}</p>
-                        <p><strong>Instructions:</strong> ${meal.strInstructions.slice(0, 150)}...</p>
                     `;
                     resultsDiv.appendChild(mealDiv);
                 });
@@ -103,6 +162,38 @@
                 resultsDiv.innerHTML = 'An error occurred while fetching data.';
                 console.error(error);
             }
+        }
+
+        function showMealDetails(meal) {
+            document.getElementById('mealTitle').textContent = meal.strMeal;
+            document.getElementById('mealImage').src = meal.strMealThumb;
+            document.getElementById('mealCategory').textContent = meal.strCategory || 'N/A';
+            document.getElementById('mealArea').textContent = meal.strArea || 'N/A';
+            document.getElementById('mealInstructions').textContent = meal.strInstructions;
+
+            const ingredientsList = document.getElementById('mealIngredients');
+            ingredientsList.innerHTML = '';
+
+            for (let i = 1; i <= 20; i++) {
+                const ingredient = meal[`strIngredient${i}`];
+                const measure = meal[`strMeasure${i}`];
+                if (ingredient && ingredient.trim()) {
+                    const li = document.createElement('li');
+                    li.textContent = `${measure || ''} ${ingredient}`;
+                    ingredientsList.appendChild(li);
+                }
+            }
+
+            document.getElementById('mealModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('mealModal').style.display = 'none';
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('searchInput').value = '';
         }
     </script>
 </body>
