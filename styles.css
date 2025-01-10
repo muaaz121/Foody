@@ -20,9 +20,6 @@ footer {
     padding: 10px;
     text-align: center;
     margin-top: 20px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
 }
 
 h1 {
@@ -36,7 +33,6 @@ h1 {
 .search-container {
     text-align: center;
     margin-top: 20px;
-    position: relative;
 }
 
 .search-container label {
@@ -51,7 +47,6 @@ input {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
-    transition: all 0.3s ease;
     margin-bottom: 10px;
 }
 
@@ -68,7 +63,6 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
 }
 
 button:hover {
@@ -86,14 +80,12 @@ button:disabled {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
-    transition: all 0.3s ease;
 }
 
 .results .no-results {
     text-align: center;
     font-size: 1.2rem;
     color: #6c757d;
-    margin-top: 20px;
 }
 
 .meal-item {
@@ -114,18 +106,12 @@ button:disabled {
 .meal-item img {
     max-width: 100%;
     border-radius: 8px;
-    transition: opacity 0.3s ease;
 }
 
 .meal-item h3 {
     margin: 10px 0;
     color: #343a40;
     font-size: 1.2rem;
-}
-
-.meal-item p {
-    font-size: 0.9rem;
-    color: #6c757d;
 }
 
 #showAllBtn {
@@ -137,7 +123,6 @@ button:disabled {
     cursor: pointer;
     display: none;
     margin-top: 20px;
-    transition: background-color 0.3s ease;
 }
 
 #showAllBtn:hover {
@@ -158,8 +143,6 @@ button:disabled {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    overflow-y: auto;
-    max-height: 90%;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -190,22 +173,10 @@ button:disabled {
     border-radius: 4px;
     cursor: pointer;
     float: right;
-    transition: background-color 0.3s ease;
 }
 
 .close-btn:hover {
     background-color: #c82333;
-}
-
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
 }
 
 /* Loading Spinner */
@@ -236,28 +207,12 @@ button:disabled {
         width: 80%;
     }
 
-    .search-container button {
-        width: 100%;
-        margin-top: 10px;
-    }
-
     .results {
         grid-template-columns: 1fr;
     }
 
-    .meal-item {
-        padding: 15px;
-        box-shadow: none;
-        border: none;
-        background-color: #f1f1f1;
-    }
-
     .modal {
         width: 80%;
-    }
-
-    footer {
-        font-size: 12px;
     }
 }
 
@@ -270,26 +225,8 @@ button:disabled {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .meal-item {
-        padding: 20px;
-    }
-
     .modal {
         width: 70%;
-    }
-}
-
-@media (min-width: 1201px) {
-    .search-container input {
-        width: 50%;
-    }
-
-    .results {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .modal {
-        width: 60%;
     }
 }
 

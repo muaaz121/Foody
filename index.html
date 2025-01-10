@@ -3,38 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meal Search</title>
+    <title>Food Search</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
     <header>
-        <h1>Search for Meals</h1>
+        <h1>Food Search</h1>
     </header>
 
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Enter meal name...">
-        <button onclick="searchMeal()">Search</button>
+        <label for="searchInput">Search for a Meal</label>
+        <input type="text" id="searchInput" placeholder="Enter food name...">
+        <button id="searchButton">Search</button>
     </div>
 
-    <div class="results" id="results"></div>
-    <button id="showAllBtn" style="display: none; margin-top: 20px;" onclick="showAllMeals()">SHOW ALL</button>
-<!-- Modal -->
-<div id="overlay" class="overlay"></div>
-
-<div id="mealModal" class="modal">
-    <div class="modal-content">
-        <h2></h2>
-        <img src="" alt="Meal Image" />
-        <ul></ul>
-        <button id="closeModalBtn" class="close-btn">Close</button>
+    <div id="resultsContainer" class="results">
+        <!-- Meal results will be displayed here -->
     </div>
-</div>
 
+    <!-- Modal -->
+    <div id="overlay" class="overlay"></div>
+
+    <div id="mealModal" class="modal">
+        <div class="modal-content">
+            <h2></h2>
+            <img src="" alt="Meal Image" />
+            <ul></ul>
+            <button id="closeModalBtn" class="close-btn">Close</button>
+        </div>
+    </div>
 
     <footer>
-        <p>&copy; 2025 Meal Finder</p>
+        <p>&copy; 2025 Food Search, All Rights Reserved</p>
     </footer>
 
-    <script src="miss.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
+

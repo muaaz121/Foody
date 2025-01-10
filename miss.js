@@ -1,92 +1,82 @@
-let allMeals = [];
-let displayedMeals = 5;
+// Search Functionality and Fetching Data
+async function fetchMeals(query) {
+    const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
+    const data = await response.json();
+    return data.meals || [];  // In case no meals are found
+}
 
-async function searchMeal() {
-    const query = document.getElementById('searchInput').value.trim();
-    const resultsDiv = document.getElementById('results');
-    const showAllBtn = document.getElementById('showAllBtn');
-    resultsDiv.innerHTML = '';
-    showAllBtn.style.display = 'none';
+// Display Meals in the DOM
+function displayMeals(meals) {
+    const resultsContainer = document.getElementById("resultsContainer");
+    resultsContainer.innerHTML = "";  // Clear previous results
 
-    if (!query) {
-        alert('Please enter a meal name to search.');
+    if (meals.length === 0) {
+        resultsContainer.innerHTML = "<p class='no-results'>No meals found!</p>";
         return;
     }
 
-    resultsDiv.innerHTML = 'Loading...';
-
-    try {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`);
-        const data = await response.json();
-
-        allMeals = data.meals || [];
-        displayedMeals = 5;
-
-        if (allMeals.length === 0) {
-            resultsDiv.innerHTML = 'No results found.';
-            return;
-        }
-
-        showResults();
-
-        if (allMeals.length > 5) {
-            showAllBtn.style.display = 'block';
-        }
-    } catch (error) {
-        resultsDiv.innerHTML = 'An error occurred while fetching data.';
-        console.error(error);
-    }
-}
-
-function showResults() {
-    const resultsDiv = document.getElementById('results');
-    const mealsToShow = allMeals.slice(0, displayedMeals);
-
-    mealsToShow.forEach(meal => {
-        const mealDiv = document.createElement('div');
-        mealDiv.className = 'meal-item';
-        mealDiv.onclick = () => showMealDetails(meal);
-        mealDiv.innerHTML = `
-            <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+    meals.slice(0, 5).forEach(meal => {
+        const mealCard = document.createElement("div");
+        mealCard.classList.add("meal-item");
+        mealCard.innerHTML = `
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
             <h3>${meal.strMeal}</h3>
-            <p><strong>Meal ID:</strong> ${meal.idMeal}</p>
-            <p><strong>Instructions:</strong> ${meal.strInstructions.slice(0, 100)}...</p>
+            <p>${meal.strCategory}</p>
         `;
-        resultsDiv.appendChild(mealDiv);
+
+        // Add click event listener to show modal
+        mealCard.addEventListener("click", () => showModal(meal));
+        resultsContainer.appendChild(mealCard);
     });
-}
 
-function showAllMeals() {
-    displayedMeals = allMeals.length;
-    showResults();
-    document.getElementById('showAllBtn').style.display = 'none';
-}
-
-function showMealDetails(meal) {
-    document.getElementById('mealTitle').textContent = meal.strMeal;
-    document.getElementById('mealImage').src = meal.strMealThumb;
-    document.getElementById('mealCategory').textContent = meal.strCategory || 'N/A';
-    document.getElementById('mealArea').textContent = meal.strArea || 'N/A';
-    document.getElementById('mealInstructions').textContent = meal.strInstructions;
-
-    const ingredientsList = document.getElementById('mealIngredients');
-    ingredientsList.innerHTML = '';
-
-    for (let i = 1; i <= 20; i++) {
-        const ingredient = meal[`strIngredient${i}`];
-        const measure = meal[`strMeasure${i}`];
-        if (ingredient && ingredient.trim()) {
-            const li = document.createElement('li');
-            li.textContent = `${measure || ''} ${ingredient}`;
-            ingredientsList.appendChild(li);
-        }
+    if (meals.length > 5) {
+        const showAllBtn = document.createElement("button");
+        showAllBtn.id = "showAllBtn";
+        showAllBtn.textContent = "SHOW ALL";
+        showAllBtn.addEventListener("click", () => displayMeals(meals));
+        resultsContainer.appendChild(showAllBtn);
     }
-
-    document.getElementById('overlay').style.display = 'block';
-    document.getElementById('mealModal').style.display = 'block';
 }
 
+// Show Modal with Meal Details
+function showModal(meal) {
+    const modal = document.getElementById("mealModal");
+    const overlay = document.getElementById("overlay");
+
+    // Populate Modal with meal information
+    modal.querySelector(".modal-content h2").textContent = meal.strMeal;
+    modal.querySelector(".modal-content ul").innerHTML = `
+        <li><strong>Meal ID:</strong> ${meal.idMeal}</li>
+        <li><strong>Category:</strong> ${meal.strCategory}</li>
+        <li><strong>Area:</strong> ${meal.strArea}</li>
+        <li><strong>Instructions:</strong> ${meal.strInstructions}</li>
+    `;
+    modal.querySelector("img").src = meal.strMealThumb;
+
+    // Show the modal and overlay
+    modal.classList.add("show");
+    overlay.style.display = "block";
+}
+
+// Close Modal
 function closeModal() {
-    document.getElementById('overlay').style.display = 'none';
-    document.getElementById('mealModal').style.display = 'none';
+    const modal = document.getElementById("mealModal");
+    const overlay = document.getElementById("overlay");
+
+    // Hide the modal and overlay
+    modal.classList.remove("show");
+    overlay.style.display = "none";
 }
+
+// Event listeners
+document.getElementById("searchButton").addEventListener("click", async () => {
+    const query = document.getElementById("searchInput").value.trim();
+    if (query) {
+        const meals = await fetchMeals(query);
+        displayMeals(meals);
+    }
+});
+
+// Close modal when clicking on overlay or close button
+document.getElementById("overlay").addEventListener("click", closeModal);
+document.getElementById("closeModalBtn").addEventListener("click", closeModal);
