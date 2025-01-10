@@ -11,15 +11,16 @@ function displayMeals(meals) {
     resultsContainer.innerHTML = "";  // Clear previous results
 
     if (meals.length === 0) {
-        resultsContainer.innerHTML = "<p class='no-results'>No meals found!</p>";
+        resultsContainer.innerHTML = "<p class='no-results text-center'>No meals found!</p>";
         return;
     }
 
     meals.slice(0, 5).forEach(meal => {
         const mealCard = document.createElement("div");
+        mealCard.classList.add("col");
         mealCard.classList.add("meal-item");
         mealCard.innerHTML = `
-            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="img-fluid">
             <h3>${meal.strMeal}</h3>
             <p>${meal.strCategory}</p>
         `;
@@ -30,11 +31,9 @@ function displayMeals(meals) {
     });
 
     if (meals.length > 5) {
-        const showAllBtn = document.createElement("button");
-        showAllBtn.id = "showAllBtn";
-        showAllBtn.textContent = "SHOW ALL";
+        const showAllBtn = document.getElementById("showAllBtn");
+        showAllBtn.classList.remove("d-none");
         showAllBtn.addEventListener("click", () => displayMeals(meals));
-        resultsContainer.appendChild(showAllBtn);
     }
 }
 
@@ -44,18 +43,16 @@ function showModal(meal) {
     const overlay = document.getElementById("overlay");
 
     // Populate Modal with meal information
-    modal.querySelector(".modal-content h2").textContent = meal.strMeal;
-    modal.querySelector(".modal-content ul").innerHTML = `
-        <li><strong>Meal ID:</strong> ${meal.idMeal}</li>
-        <li><strong>Category:</strong> ${meal.strCategory}</li>
-        <li><strong>Area:</strong> ${meal.strArea}</li>
-        <li><strong>Instructions:</strong> ${meal.strInstructions}</li>
-    `;
+    modal.querySelector("h2").textContent = meal.strMeal;
     modal.querySelector("img").src = meal.strMealThumb;
+    modal.querySelector("#mealId").textContent = meal.idMeal;
+    modal.querySelector("#mealCategory").textContent = meal.strCategory;
+    modal.querySelector("#mealArea").textContent = meal.strArea;
+    modal.querySelector("#mealInstructions").textContent = meal.strInstructions;
 
     // Show the modal and overlay
     modal.classList.add("show");
-    overlay.style.display = "block";
+    overlay.classList.add("show");
 }
 
 // Close Modal
@@ -65,7 +62,7 @@ function closeModal() {
 
     // Hide the modal and overlay
     modal.classList.remove("show");
-    overlay.style.display = "none";
+    overlay.classList.remove("show");
 }
 
 // Event listeners
